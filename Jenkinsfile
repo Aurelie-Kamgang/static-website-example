@@ -10,7 +10,7 @@ pipeline {
         IMAGE_TAG = "v1"
     }
     stages {
-        stage ('Build Image') {
+        stage ('Build Image with docker') {
             agent any
             steps {
                 script {
