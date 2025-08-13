@@ -4,10 +4,10 @@ pipeline {
         DOCKERHUB_AUTH = credentials('DOCKERHUB_AUTH')
         ID_DOCKER = "${DOCKERHUB_AUTH_USR}"
         PORT_EXPOSED = "80"
-        HOSTNAME_DEPLOY_PROD = "3.86.157.173"
-        HOSTNAME_DEPLOY_STAGING = "54.242.141.158"
+        HOSTNAME_DEPLOY_PROD = "44.204.48.121"
+        HOSTNAME_DEPLOY_STAGING = "13.222.225.6"
         IMAGE_NAME = "webappstatic"
-        IMAGE_TAG = "v1"
+        IMAGE_TAG = "v2"
     }
     stages {
         stage ('Build Image with docker') {
@@ -74,12 +74,11 @@ pipeline {
                 sshagent(credentials: ['SSH_AUTH_SERVER']) {
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                        ssh-keyscan -t rsa,dsa ${HOSTNAME_DEPLOY_STAGING} >> ~/.ssh/known_hosts
                         command1="docker login -u $DOCKERHUB_AUTH_USR -p $DOCKERHUB_AUTH_PSW"
                         command2="docker pull $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         command3="docker rm -f webappstatic || echo 'app does not exist'"
                         command4="docker run -d -p 80:80 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
-                        ssh -t ubuntu@${HOSTNAME_DEPLOY_STAGING} \
+                        ssh -o StrictHostKeyChecking=no ubuntu@${HOSTNAME_DEPLOY_STAGING} \
                             -o SendEnv=IMAGE_NAME \
                             -o SendEnv=IMAGE_TAG \
                             -o SendEnv=DOCKERHUB_AUTH_USR \
@@ -107,12 +106,11 @@ pipeline {
                 sshagent(credentials: ['SSH_AUTH_SERVER']) {
                     sh '''
                         [ -d ~/.ssh ] || mkdir ~/.ssh && chmod 0700 ~/.ssh
-                        ssh-keyscan -t rsa,dsa ${HOSTNAME_DEPLOY_PROD} >> ~/.ssh/known_hosts
                         command1="docker login -u $DOCKERHUB_AUTH_USR -p $DOCKERHUB_AUTH_PSW"
                         command2="docker pull $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         command3="docker rm -f webappstatic || echo 'app does not exist'"
                         command4="docker run -d -p 80:80 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
-                        ssh -t ubuntu@${HOSTNAME_DEPLOY_PROD} \
+                        ssh -o StrictHostKeyChecking=no ubuntu@${HOSTNAME_DEPLOY_PROD} \
                             -o SendEnv=IMAGE_NAME \
                             -o SendEnv=IMAGE_TAG \
                             -o SendEnv=DOCKERHUB_AUTH_USR \
