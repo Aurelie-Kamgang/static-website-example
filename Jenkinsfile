@@ -4,10 +4,10 @@ pipeline {
         DOCKERHUB_AUTH = credentials('DOCKERHUB_AUTH')
         ID_DOCKER = "${DOCKERHUB_AUTH_USR}"
         PORT_EXPOSED = "80"
-        HOSTNAME_DEPLOY_PROD = "44.204.48.121"
-        HOSTNAME_DEPLOY_STAGING = "13.222.225.6"
-        IMAGE_NAME = "webappstatic"
-        IMAGE_TAG = "v2"
+        HOSTNAME_DEPLOY_PROD = "3.87.87.91"
+        HOSTNAME_DEPLOY_STAGING = "3.92.66.219"
+        IMAGE_NAME = "webappstaticbootcamp27"
+        IMAGE_TAG = "v1"
     }
     stages {
         stage ('Build Images with docker') {
