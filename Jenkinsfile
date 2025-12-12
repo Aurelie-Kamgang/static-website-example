@@ -26,7 +26,7 @@ pipeline {
                  sh '''
                     echo "Clean Environment"
                     docker rm -f $IMAGE_NAME || echo "container does not exist"
-                    docker run --name $IMAGE_NAME -d -p ${PORT_EXPOSED}:8080 ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
+                    docker run --name $IMAGE_NAME -d -p ${PORT_EXPOSED}:80 ${ID_DOCKER}/$IMAGE_NAME:$IMAGE_TAG
                     sleep 5
                  '''
                }
@@ -77,7 +77,7 @@ pipeline {
                         command1="docker login -u $DOCKERHUB_AUTH_USR -p $DOCKERHUB_AUTH_PSW"
                         command2="docker pull $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         command3="docker rm -f webappstatic || echo 'app does not exist'"
-                        command4="docker run -d -p 80:8080 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
+                        command4="docker run -d -p 80:80 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         ssh -o StrictHostKeyChecking=no ubuntu@${HOSTNAME_DEPLOY_STAGING} \
                             -o SendEnv=IMAGE_NAME \
                             -o SendEnv=IMAGE_TAG \
@@ -109,7 +109,7 @@ pipeline {
                         command1="docker login -u $DOCKERHUB_AUTH_USR -p $DOCKERHUB_AUTH_PSW"
                         command2="docker pull $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         command3="docker rm -f webappstatic || echo 'app does not exist'"
-                        command4="docker run -d -p 80:8080 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
+                        command4="docker run -d -p 80:80 --name webappstatic $DOCKERHUB_AUTH_USR/$IMAGE_NAME:$IMAGE_TAG"
                         ssh -o StrictHostKeyChecking=no ubuntu@${HOSTNAME_DEPLOY_PROD} \
                             -o SendEnv=IMAGE_NAME \
                             -o SendEnv=IMAGE_TAG \
